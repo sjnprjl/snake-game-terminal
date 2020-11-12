@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+import random
+from time import sleep
+import os
+import sys
 import re
 plat = None
 try:
@@ -8,10 +12,6 @@ except ModuleNotFoundError:
     plat = "win"
     import msvcrt
 
-import sys
-import os
-from time import sleep
-import random
 
 # author = Sujan Parajuli aka (____) @sujanP100
 # github = /sujanP100
@@ -40,7 +40,8 @@ def put(char, coor, playground=playground):
 class Snake:
     def __init__(self, char, speed):
         self.__char = char
-        self.__sl = [(ROW // 2, COL // 2), (ROW // 2 , COL // 2 - 1), (ROW // 2 , COL // 2 - 2)]
+        self.__sl = [(ROW // 2, COL // 2), (ROW // 2, COL //
+                                            2 - 1), (ROW // 2, COL // 2 - 2)]
         self.__head = self.__sl[0]
         self.isMoving = False
 
@@ -78,7 +79,8 @@ class Snake:
 
     def isDead(self):
         try:
-            if self.__head[0] >= ROW - 1 or self.__head[0] <= 0 or self.__head[1] >= COL - 1 or self.__head[1] <= 0:
+            if self.__head[0] >= ROW - \
+                    1 or self.__head[0] <= 0 or self.__head[1] >= COL - 1 or self.__head[1] <= 0:
                 return True
         except BaseException:
             print("Game Over")
@@ -112,6 +114,7 @@ f_c = gc(ROW, COL, sn.get_sl())
 put(FOOD, f_c)
 key = ''
 
+
 def game():
     global f_c
     global POINTS
@@ -122,7 +125,7 @@ def game():
     q = None
     try:
         q = sys.stdin.read(1)
-    except:
+    except BaseException:
         if msvcrt.kbhit():
             q = msvcrt.getch()
     if q == "q":
@@ -149,6 +152,7 @@ def game():
 
     d(playground)
 
+
 def linux():
     with raw(sys.stdin):
         with nonblocking(sys.stdin):
@@ -164,6 +168,8 @@ def linux():
                     os.system("clear")
                 else:
                     print("GAME OVER!")
+
+
 def win():
     status = 1
     os.system('clear')
@@ -174,11 +180,13 @@ def win():
         else:
             print("GAME OVER!")
 
+
 def main():
     if plat == 'linux':
         linux()
     else:
         win()
+
 
 if __name__ == '__main__':
     main()

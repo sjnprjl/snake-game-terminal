@@ -4,6 +4,7 @@ import os
 import tty
 import termios
 
+
 class raw(object):
     def __init__(self, stream):
         self.stream = stream
