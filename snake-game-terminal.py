@@ -114,11 +114,13 @@ f_c = gc(ROW, COL, sn.get_sl())
 put(FOOD, f_c)
 key = ''
 
+status = 1
 
 def game():
     global f_c
     global POINTS
     global key
+    global status
     print(
         "(R: {} , C: {}) : POINTS: {}, FOOD: {}, BODY: {}, WALL: {}".format(
             ROW, COL, POINTS, FOOD, SNAKE_BODY, WALL))
@@ -154,6 +156,7 @@ def game():
 
 
 def linux():
+    global status
     with raw(sys.stdin):
         with nonblocking(sys.stdin):
             status = 1
@@ -171,7 +174,7 @@ def linux():
 
 
 def win():
-    status = 1
+    global status
     os.system('clear')
     while status:
         game()
