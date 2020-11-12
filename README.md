@@ -6,7 +6,11 @@
 
 ## screenshot 
 
-<img src=image.png with=100 align=left />
+<img src=image.png with=100 />
+
+
+
+
 
 # INSTALLATION
 
