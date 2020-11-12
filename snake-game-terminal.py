@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 import re
-from smoothIO import raw, nonblocking
-import random
+plat = None
+try:
+    from smoothIO import raw, nonblocking
+    plat = "linux"
+except ModuleNotFoundError:
+    plat = "win"
+    import msvcrt
+
 import sys
 import os
 from time import sleep
+import random
 
 # author = Sujan Parajuli aka (____) @sujanP100
 # github = /sujanP100
@@ -16,8 +23,8 @@ WALL = "◙"
 GROUND = " "
 FOOD = "◉"
 SNAKE_BODY = "■"
-ROW = 50
-COL = 80
+ROW = 20
+COL = 50
 POINTS = 0
 k = {"UP": "w", "DOWN": 's', "RIGHT": 'd', "LEFT": 'a'}
 
@@ -103,46 +110,53 @@ sn = Snake(SNAKE_BODY, 1)
 sn.add()
 f_c = gc(ROW, COL, sn.get_sl())
 put(FOOD, f_c)
+key = ''
 
-
-def main():
+def game():
     global f_c
     global POINTS
+    global key
+    print(
+        "(R: {} , C: {}) : POINTS: {}, FOOD: {}, BODY: {}, WALL: {}".format(
+            ROW, COL, POINTS, FOOD, SNAKE_BODY, WALL))
+    q = None
+    try:
+        q = sys.stdin.read(1)
+    except:
+        if msvcrt.kbhit():
+            q = msvcrt.getch()
+    if q == "q":
+        os.system("clear")
+        print("Thank you for playing :)")
+        sys.exit()
+    if q == k["UP"] and key != 'd':
+        key = 'u'
+    elif q == k["DOWN"] and key != 'u':
+        key = 'd'
+    elif q == k['RIGHT'] and key != 'l':
+        key = 'r'
+    elif q == k["LEFT"] and key != 'r':
+        key = 'l'
+    sn.movement(key)
+    if sn.isDead():
+        status = 0
+    if sn.hasEaten(f_c):
+        f_c = gc(ROW, COL, sn.get_sl())
+        put(FOOD, f_c)
+        POINTS += 1
+    elif not sn.hasEaten(f_c) and sn.isMoving:
+        sn.update()
+
+    d(playground)
+
+def linux():
     with raw(sys.stdin):
         with nonblocking(sys.stdin):
             status = 1
             os.system("clear")
-            key = ''
             while status:
                 try:
-                    print(
-                        "(R: {} , C: {}) : POINTS: {}, FOOD: {}, BODY: {}, WALL: {}".format(
-                            ROW, COL, POINTS, FOOD, SNAKE_BODY, WALL))
-                    q = sys.stdin.read(1)
-                    print(q)
-                    if q == "q":
-                        os.system("clear")
-                        print("Thank you for playing :)")
-                        sys.exit()
-                    if q == k["UP"] and key != 'd':
-                        key = 'u'
-                    elif q == k["DOWN"] and key != 'u':
-                        key = 'd'
-                    elif q == k['RIGHT'] and key != 'l':
-                        key = 'r'
-                    elif q == k["LEFT"] and key != 'r':
-                        key = 'l'
-                    sn.movement(key)
-                    if sn.isDead():
-                        status = 0
-                    if sn.hasEaten(f_c):
-                        f_c = gc(ROW, COL, sn.get_sl())
-                        put(FOOD, f_c)
-                        POINTS += 1
-                    elif not sn.hasEaten(f_c) and sn.isMoving:
-                        sn.update()
-
-                    d(playground)
+                    game()
                 except IOError:
                     print('not ready')
                 sleep(RATE)
@@ -150,7 +164,21 @@ def main():
                     os.system("clear")
                 else:
                     print("GAME OVER!")
+def win():
+    status = 1
+    os.system('clear')
+    while status:
+        game()
+        if status:
+            os.system("clear")
+        else:
+            print("GAME OVER!")
 
+def main():
+    if plat == 'linux':
+        linux()
+    else:
+        win()
 
 if __name__ == '__main__':
     main()

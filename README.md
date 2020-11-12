@@ -4,32 +4,28 @@
 
 
 
-Note: 
+## screenshot 
 
->  **Run snake-game-terminal.py for linux**
-
->  **Run snake-game-terminal-win.py for windows**
-
-
+<img src=image.png with=100 align=left />
 
 # INSTALLATION
 
 ```bash
 
+
 git clone https://github.com/sujanp100/snake-game-terminal.git
 
 cd snake-game-terminal
 
-python3 snake-game-terminal-min.py	#windows user
+```
 
-python3 snake-game-terminal.py		#linux user
+```bash
 
-#OR first make it executable
-
+python[x] snake-game-terminal.py # x = 3
+#or 
+#make it executable first(linux)
 chmod +x snake-game-terminal.py
-
-#run it
-./snake-game-terminal.py
+./snake-game-terminal.py #run
 
 ```
 
