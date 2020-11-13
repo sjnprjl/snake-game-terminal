@@ -26,10 +26,21 @@ SNAKE_BODY = "■"
 ROW = 20
 COL = 50
 POINTS = 0
-k = {"UP": "w", "DOWN": 's', "RIGHT": 'd', "LEFT": 'a'}
+k = {
+    "UP": [
+        "w", b'w'], "DOWN": [
+            's', b's'], "RIGHT": [
+                'd', b'd'], "LEFT": [
+                    'a', b'a'], "QUIT": [
+                        'q', b'q']}
 
-playground = [[WALL if j == 0 or j == COL - 1 or i == 0 or i ==
-               ROW - 1 else GROUND for j in range(COL)] for i in range(ROW)]
+
+def gen_playground():
+    return [[WALL if j == 0 or j == COL - 1 or i == 0 or i ==
+             ROW - 1 else GROUND for j in range(COL)] for i in range(ROW)]
+
+
+playground = gen_playground()
 
 
 def put(char, coor, playground=playground):
@@ -51,6 +62,9 @@ class Snake:
 
     def get_sl(self):
         return self.__sl
+
+    def set_sl(self, l):
+        self.__sl = l
 
     def get_head(self):
         return self.__head
@@ -116,7 +130,8 @@ key = ''
 
 status = 1
 
-def game():
+
+def game(q):
     global f_c
     global POINTS
     global key
@@ -124,23 +139,21 @@ def game():
     print(
         "(R: {} , C: {}) : POINTS: {}, FOOD: {}, BODY: {}, WALL: {}".format(
             ROW, COL, POINTS, FOOD, SNAKE_BODY, WALL))
-    q = None
-    try:
-        q = sys.stdin.read(1)
-    except BaseException:
-        if msvcrt.kbhit():
-            q = msvcrt.getch()
-    if q == "q":
-        os.system("clear")
+
+    if q in k["QUIT"]:
+        if plat == "linux":
+            os.system("clear")
+        else:
+            os.system('cls')
         print("Thank you for playing :)")
         sys.exit()
-    if q == k["UP"] and key != 'd':
+    if q in k["UP"] and key != 'd':
         key = 'u'
-    elif q == k["DOWN"] and key != 'u':
+    elif q in k["DOWN"] and key != 'u':
         key = 'd'
-    elif q == k['RIGHT'] and key != 'l':
+    elif q in k['RIGHT'] and key != 'l':
         key = 'r'
-    elif q == k["LEFT"] and key != 'r':
+    elif q in k["LEFT"] and key != 'r':
         key = 'l'
     sn.movement(key)
     if sn.isDead():
@@ -163,7 +176,9 @@ def linux():
             os.system("clear")
             while status:
                 try:
-                    game()
+                    q = sys.stdin.read(1)
+                    print(q)
+                    game(q)
                 except IOError:
                     print('not ready')
                 sleep(RATE)
@@ -175,11 +190,15 @@ def linux():
 
 def win():
     global status
-    os.system('clear')
+    os.system('cls')
+    q = None
     while status:
-        game()
+        if msvcrt.kbhit():
+            q = msvcrt.getch()
+        game(q)
+        sleep(RATE)
         if status:
-            os.system("clear")
+            os.system("cls")
         else:
             print("GAME OVER!")
 
