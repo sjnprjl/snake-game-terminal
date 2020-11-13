@@ -19,10 +19,10 @@ except ModuleNotFoundError:
 
 
 RATE = 0.08
-WALL = "◙"
+WALL = "#"  # "◙"
 GROUND = " "
-FOOD = "◉"
-SNAKE_BODY = "■"
+FOOD = "O"  # "◉"
+SNAKE_BODY = "%"  # "■"
 ROW = 20
 COL = 50
 POINTS = 0
