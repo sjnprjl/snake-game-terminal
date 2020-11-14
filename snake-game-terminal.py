@@ -30,10 +30,10 @@ POINTS = 0
 # i am not able to add arrow key :( (NOOB). So if somebody with better knowledge
 # than I have can solve this issue than please help me
 k = {
-    "UP": [119],
-    "DOWN": [115],
-    "RIGHT": [100],
-    "LEFT": [97],
+    "UP": [119, 87],
+    "DOWN": [115, 83],
+    "RIGHT": [100, 68],
+    "LEFT": [97, 65],
     "QUIT": [113]}
 
 
@@ -70,7 +70,7 @@ def put(char, coor, playground=playground):
 
 
 class Snake:
-    def __init__(self, char, speed):
+    def __init__(self, char):
         self.__char = char
         self.__sl = [(ROW // 2, COL // 2), (ROW // 2, COL //
                                             2 - 1), (ROW // 2, COL // 2 - 2)]
@@ -143,7 +143,7 @@ def gc(r, c, sl):
             return (x, y)
 
 
-sn = Snake(SNAKE_SKIN, 1)
+sn = Snake(SNAKE_SKIN)
 sn.add()
 f_c = gc(ROW, COL, sn.get_sl())
 put(FOOD, f_c)
@@ -226,7 +226,7 @@ def win():
     q = None
     while status:
         if msvcrt.kbhit():
-            q = msvcrt.getch()
+            q = ord(msvcrt.getch())
         game(q)
         sleep(RATE)
         if status:
