@@ -36,14 +36,14 @@ chmod +x snake-game-terminal.py
 
 ```
         w 
-    a       s
-        d
+    a       d
+        s
 
 OR(CAPS)
 
         W
-    A       S
-        D
+    A       D
+        S
 ```
 
 
