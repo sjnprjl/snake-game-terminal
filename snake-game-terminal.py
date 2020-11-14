@@ -19,25 +19,46 @@ except ModuleNotFoundError:
 
 
 RATE = 0.08
-WALL = "#"  # "◙"
+WALL = ("|", "-", '+')  # "◙" horizontal and vertical wall and cornor
 GROUND = " "
-FOOD = "O"  # "◉"
-SNAKE_BODY = "%"  # "■"
+FOOD = "0"  # "◉"
+SNAKE_SKIN = "*"  # "■"
 ROW = 20
 COL = 50
 POINTS = 0
+
+# i am not able to add arrow key :( (NOOB). So if somebody with better knowledge
+# than I have can solve this issue than please help me
 k = {
-    "UP": [
-        "w", b'w'], "DOWN": [
-            's', b's'], "RIGHT": [
-                'd', b'd'], "LEFT": [
-                    'a', b'a'], "QUIT": [
-                        'q', b'q']}
+    "UP": [119],
+    "DOWN": [115],
+    "RIGHT": [100],
+    "LEFT": [97],
+    "QUIT": [113]}
 
 
 def gen_playground():
-    return [[WALL if j == 0 or j == COL - 1 or i == 0 or i ==
-             ROW - 1 else GROUND for j in range(COL)] for i in range(ROW)]
+    # return [[WALL[1] if j == 0 or j == COL - 1 or i == 0 or i ==
+    # ROW - 1 else GROUND for j in range(COL)] for i in range(ROW)]
+    return [
+        [
+            WALL[2] if (
+                j == 0 and i == 0) or (
+                i == 0 and j == COL -
+                1) or (
+                    i == ROW -
+                    1 and j == COL -
+                    1) or (
+                        i == ROW -
+                        1 and j == 0) else WALL[0] if (
+                            (j == 0 or j == COL -
+                             1) and (
+                                i != 0 or i != ROW -
+                                1)) else WALL[1] if (
+                                    i == 0 or i == ROW -
+                                    1) and (
+                                        j != 0 or j != COL -
+                1) else GROUND for j in range(COL)] for i in range(ROW)]
 
 
 playground = gen_playground()
@@ -122,7 +143,7 @@ def gc(r, c, sl):
             return (x, y)
 
 
-sn = Snake(SNAKE_BODY, 1)
+sn = Snake(SNAKE_SKIN, 1)
 sn.add()
 f_c = gc(ROW, COL, sn.get_sl())
 put(FOOD, f_c)
@@ -131,14 +152,20 @@ key = ''
 status = 1
 
 
+game_start = False
+
+
 def game(q):
     global f_c
     global POINTS
     global key
     global status
+    global game_start
+    # stats
     print(
-        "(R: {} , C: {}) : POINTS: {}, FOOD: {}, BODY: {}, WALL: {}".format(
-            ROW, COL, POINTS, FOOD, SNAKE_BODY, WALL))
+        "PLAYGROUND_SIZE({} {}):food coor: {} | snake length: {} | points: {}".format(
+            ROW, COL, f_c, len(
+                sn.get_sl()), POINTS))
 
     if q in k["QUIT"]:
         if plat == "linux":
@@ -155,6 +182,11 @@ def game(q):
         key = 'r'
     elif q in k["LEFT"] and key != 'r':
         key = 'l'
+    if not game_start:
+        if key == 'l':
+            key = 'r'
+        elif key:
+            game_start = True
     sn.movement(key)
     if sn.isDead():
         status = 0
@@ -176,8 +208,8 @@ def linux():
             os.system("clear")
             while status:
                 try:
-                    q = sys.stdin.read(1)
-                    print(q)
+                    q = sys.stdin.read(1) or '~'
+                    q = ord(q)
                     game(q)
                 except IOError:
                     print('not ready')
