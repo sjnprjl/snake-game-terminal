@@ -2,6 +2,10 @@
 import random
 from time import sleep
 import os
+import platform
+import socket
+from functools import lru_cache
+import pyttsx3
 import sys
 import re
 plat = None
@@ -16,6 +20,13 @@ except ModuleNotFoundError:
 # author = Sujan Parajuli aka (____) @sujanP100
 # github = /sujanP100
 # _____________________________________________
+# creating voice Engine
+engine = pyttsx3.init()
+voices= engine.getProperty("voices")
+engine.setProperty("voice", voices[1].id)
+engine.setProperty('rate',150)
+engine.say("Welcome To Our Snake Game. Good Luck. Please select Your Snake Character Right here. ")
+engine.runAndWait()
 
 
 RATE = 0.08
@@ -26,15 +37,18 @@ SNAKE_SKIN = "*"  # "■"
 ROW = 20
 COL = 50
 POINTS = 0
+user = platform.node() or socket.gethostname()
+SNAKE_BODY =(input('Input Any Character for Your Snake :- '))# "■"
+# SNAKE_BODY ='*' 
 
 # i am not able to add arrow key :( (NOOB). So if somebody with better knowledge
 # than I have can solve this issue than please help me
 k = {
-    "UP": [119],
-    "DOWN": [115],
-    "RIGHT": [100],
-    "LEFT": [97],
-    "QUIT": [113]}
+    "UP": [119,87],
+    "DOWN": [115,83],
+    "RIGHT": [100,68],
+    "LEFT": [97,65],
+    "QUIT": [113,81]}
 
 
 def gen_playground():
@@ -160,11 +174,12 @@ def game(q):
     global POINTS
     global key
     global status
+    global user
     global game_start
     # stats
     print(
-        "PLAYGROUND_SIZE({} {}):food coor: {} | snake length: {} | points: {}".format(
-            ROW, COL, f_c, len(
+        "PLAYGROUND_SIZE({} {}):food coor: {}| User: {} | snake length: {} | points: {} ".format(
+            ROW, COL, f_c, user, len(
                 sn.get_sl()), POINTS))
 
     if q in k["QUIT"]:
@@ -172,7 +187,9 @@ def game(q):
             os.system("clear")
         else:
             os.system('cls')
-        print("Thank you for playing :)")
+            print(f"{user}, Thank you for playing :)")
+            engine.say(f"{user}, Thank you for playing ")
+            engine.runAndWait()
         sys.exit()
     if q in k["UP"] and key != 'd':
         key = 'u'
@@ -193,7 +210,7 @@ def game(q):
     if sn.hasEaten(f_c):
         f_c = gc(ROW, COL, sn.get_sl())
         put(FOOD, f_c)
-        POINTS += 1
+        POINTS += 5
     elif not sn.hasEaten(f_c) and sn.isMoving:
         sn.update()
 
@@ -218,6 +235,10 @@ def linux():
                     os.system("clear")
                 else:
                     print("GAME OVER!")
+                    print(f"{user},You Have Scored {POINTS}")
+                    engine.say(f"Game Over!! {user}, You have Scored{POINTS}. Better Luck Next Time. Thanks For Playing Our game")
+                    engine.runAndWait()
+                    
 
 
 def win():
@@ -227,13 +248,16 @@ def win():
     while status:
         if msvcrt.kbhit():
             q = msvcrt.getch()
+            q = ord(q)
         game(q)
         sleep(RATE)
         if status:
             os.system("cls")
         else:
             print("GAME OVER!")
-
+            print(f"{user},You Have Scored {POINTS}")
+            engine.say(f"Game Over!! {user}, You have Scored{POINTS}. Better Luck Next Time. Thanks For Playing Our game")
+            engine.runAndWait()
 
 def main():
     if plat == 'linux':
