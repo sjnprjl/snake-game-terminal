@@ -32,6 +32,19 @@ chmod +x snake-game-terminal.py
 ./snake-game-terminal.py #run
 
 ```
+## GAME MOVEMENT
+
+```
+        w 
+    a       s
+        d
+
+OR(CAPS)
+
+        W
+    A       S
+        D
+```
 
 
 
